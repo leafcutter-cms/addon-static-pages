@@ -29,7 +29,6 @@ URLFactory::normalizeCurrent();
 //initialize CMS context
 Leafcutter::beginContext($config, $logger);
 $leafcutter = Leafcutter::get();
-$leafcutter->addons()->load('staticpages');
 $leafcutter->content()->addDirectory(__DIR__ . '/content');
 $leafcutter->theme()->loadTheme('leafcutter-basic');
 

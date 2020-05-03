@@ -1,5 +1,9 @@
 site:
-  url: 'http://localhost/leafcutter-static-pages/demo/'
+  url: 'http://localhost/static-pages/demo/'
+
+addons:
+  activate:
+    - static-pages
 
 templates:
   site:

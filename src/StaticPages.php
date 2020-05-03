@@ -2,13 +2,11 @@
 namespace Leafcutter\Addons\Leafcutter\StaticPages;
 
 use Leafcutter\Common\Filesystem;
-use Leafcutter\Leafcutter;
 use Leafcutter\Pages\PageInterface;
-use Leafcutter\Plugins\AbstractPlugin;
 use Leafcutter\Response;
 use Leafcutter\URL;
 
-class Addon extends \Leafcutter\Addons\AbstractAddon
+class StaticPages extends \Leafcutter\Addons\AbstractAddon
 {
     const DEFAULT_CONFIG = [
         "enabled" => true,
@@ -119,15 +117,15 @@ EOS;
         if ($path == '' || substr($path, -1) == '/') {
             $path .= 'index.html';
         }
-        return $this->config('directory') .'/'. $path;
+        return $this->config('directory') . '/' . $path;
     }
 
     /**
-     * Method is executed as the first step when this Addon is loaded for use.
+     * Method is executed as the first step when this Addon is activated.
      *
      * @return void
      */
-    public function load(): void
+    public function activate(): void
     {
     }
 
@@ -151,7 +149,7 @@ EOS;
      */
     public static function provides(): array
     {
-        return ['staticpages'];
+        return ['static-pages'];
     }
 
     /**
@@ -175,7 +173,7 @@ EOS;
      */
     public static function name(): string
     {
-        if ($data = json_decode(file_get_contents(__DIR__.'/../composer.json'),true)) {
+        if ($data = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true)) {
             return $data['name'];
         }
         return 'unknown/unknownaddon';
