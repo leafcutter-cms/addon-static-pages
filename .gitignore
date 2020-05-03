@@ -1,0 +1,6 @@
+/vendor
+/composer.lock
+/demo/assets
+/demo/cache
+/demo/debug.log
+/demo/**/*.html

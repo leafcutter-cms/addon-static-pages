@@ -1,0 +1,25 @@
+{
+    "name": "leafcutter/leafcutter-static-pages",
+    "description": "Leafcutter static pages plugin. Creates static HTML of page content, which then gets updated asynchronously.",
+    "extra": {
+        "leafcutter-addon": "Leafcutter\\Addons\\Leafcutter\\StaticPages\\Addon"
+    },
+    "autoload": {
+        "psr-4": {
+            "Leafcutter\\Addons\\Leafcutter\\StaticPages\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Joby Elliott",
+            "email": "code@byjoby.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "leafcutter/leafcutter": "*"
+    },
+    "type": "leafcutter-addon",
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
