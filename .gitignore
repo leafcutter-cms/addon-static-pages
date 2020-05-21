@@ -1,6 +1,11 @@
 /vendor
 /composer.lock
-/demo/assets
-/demo/cache
+
+/demo/assets/*
+!/demo/assets/README.md
+/demo/cache/*
+!/demo/cache/README.md
 /demo/debug.log
 /demo/**/*.html
+
+env.yaml

@@ -1,8 +1,8 @@
 {
     "name": "leafcutter/addon-static-pages",
-    "description": "Leafcutter static pages plugin. Creates static HTML of page content, which then gets updated asynchronously.",
+    "description": "Leafcutter static page addon. Creates static HTML files of page content, and injects asynchronous JS calls to update them.",
     "extra": {
-        "leafcutter-addon": "Leafcutter\\Addons\\Leafcutter\\StaticPages\\StaticPages"
+        "leafcutter-addon": "Leafcutter\\Addons\\Leafcutter\\StaticPages\\Addon"
     },
     "autoload": {
         "psr-4": {
@@ -16,10 +16,12 @@
         }
     ],
     "license": "MIT",
-    "require": {
-        "leafcutter/leafcutter": "*"
-    },
     "type": "leafcutter-addon",
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "leafcutter/leafcutter": "dev-master",
+        "leafcutter/theme-core": "dev-master",
+        "leafcutter/addon-php-content": "dev-master"
+    }
 }

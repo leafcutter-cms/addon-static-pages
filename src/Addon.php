@@ -2,11 +2,11 @@
 namespace Leafcutter\Addons\Leafcutter\StaticPages;
 
 use Leafcutter\Common\Filesystem;
-use Leafcutter\Pages\PageInterface;
+use Leafcutter\Pages\PageEvent;
 use Leafcutter\Response;
 use Leafcutter\URL;
 
-class StaticPages extends \Leafcutter\Addons\AbstractAddon
+class Addon extends \Leafcutter\Addons\AbstractAddon
 {
     const DEFAULT_CONFIG = [
         "enabled" => true,
@@ -14,22 +14,67 @@ class StaticPages extends \Leafcutter\Addons\AbstractAddon
         "ttl" => 30,
     ];
 
-    public function onResponseURL_namespace_staticPageBuild($url): ?Response
+    /**
+     * Before returning a page, convert its query string into a
+     * base64-encoded string inside the filename. This is necessary
+     * to allow static caching of query-driven content.
+     * 
+     * It's done across the board to provide consistency in page
+     * URLs, regardless of whether they are actually cacheable.
+     *
+     * @param URL $url
+     * @return void
+     */
+    public function onPageReturn(PageEvent $event)
     {
-        $rUrl = new URL('@/' . $url->sitePath());
-        $currentHash = $this->leafcutter->content()->hash($rUrl->sitePath(), $rUrl->siteNamespace());
+        $page = $event->page();
+        $url = $page->url();
+        if ($url->query()) {
+            $path = $url->path();
+            $path .= '__q__' . URL::base64_encode(substr($url->queryString(), 1)) . '.html';
+            $url->setPath($path);
+            $url->setQuery([]);
+            $page->setUrl($url);
+        }
+    }
+
+    /**
+     * Converts requests for URLs with base64-encoded strings in the
+     * filename back into normal URLs with query strings. Transforms
+     * the given URL in place.
+     *
+     * @param URL $url
+     * @return void
+     */
+    public function onPageURL(URL $url)
+    {
+        $path = $url->path();
+        if (preg_match('/__q__([a-zA-Z0-9\-_]+).html$/', $path, $matches)) {
+            $query = URL::base64_decode($matches[1]);
+            parse_str($query, $query);
+            if ($query) {
+                $path = preg_replace('/__q__([a-zA-Z0-9\-_]+).html$/','',$path);
+                $url->setPath($path);
+                $url->setQuery($query);
+            }
+        }
+    }
+
+    public function onResponseURL_namespace_staticPageBuild(URL $url): ?Response
+    {
+        $rUrl = new URL('@/' . URL::base64_decode($url->sitePath()));
         $response = new Response();
         $response->setMime('application/javascript');
         $response->setTemplate(null);
         $response->header('cache-control', 'max-age=60, public');
         if ($this->needsRebuild($rUrl)) {
             if (is_file($this->urlSavePath($rUrl)) && !$this->config('enabled')) {
-                $response->setText('');
+                $response->setText('console.log("Deleting cached page in the background");');
                 unlink($this->urlSavePath($rUrl));
                 return $response;
             }
             $this->leafcutter->buildResponse($rUrl, false);
-            $response->setText('');
+            $response->setText('console.log("Rebuilding page in the background");');
             $response->doAfter(function () use ($rUrl) {
                 $this->leafcutter->buildResponse($rUrl, false);
             });
@@ -39,7 +84,14 @@ class StaticPages extends \Leafcutter\Addons\AbstractAddon
         return $response;
     }
 
-    protected function needsRebuild($url)
+    /**
+     * Determine whether a fresh HTML file needs to be built
+     * for the given URL.
+     *
+     * @param URL $url
+     * @return boolean
+     */
+    protected function needsRebuild(URL $url) : bool
     {
         $file = $this->urlSavePath($url);
         if (is_file($file) && !$this->config('enabled')) {
@@ -66,7 +118,15 @@ class StaticPages extends \Leafcutter\Addons\AbstractAddon
         return false;
     }
 
-    public function onResponseReturn($response)
+    /**
+     * Cache page to a static HTML file if possible, and inject
+     * a script call that will asynchronously check for whether
+     * the generate page needs rebuilding.
+     *
+     * @param Response $response
+     * @return void
+     */
+    public function onResponseReturn(Response $response)
     {
         if (!$this->config('enabled')) {
             return;
@@ -74,7 +134,7 @@ class StaticPages extends \Leafcutter\Addons\AbstractAddon
         if ($path = $this->savePath($response)) {
             $url = $response->source()->url();
             $content = $response->content();
-            $scriptURL = new URL('@/~staticPageBuild/' . $response->source()->url()->sitePath());
+            $scriptURL = new URL('@/~staticPageBuild/' . base64_encode($response->source()->url()->sitePath()));
             $meta = json_encode([
                 'hash' => $this->leafcutter->content()->hash($url->sitePath(), $url->siteNamespace()),
                 'time' => time(),
@@ -94,6 +154,13 @@ EOS;
         }
     }
 
+    /**
+     * Attempts to generate a valid save path for a static HTML
+     * file to cache a given Response.
+     *
+     * @param Response $response
+     * @return string|null
+     */
     protected function savePath(Response $response): ?string
     {
         if ($response->dynamic()) {
@@ -102,15 +169,18 @@ EOS;
         if ($response->status() != 200) {
             return null;
         }
-        if (!($response->source() instanceof PageInterface)) {
+        if ($response->url()->query()) {
             return null;
         }
-        if ($response->source()->url()->query()) {
-            return null;
-        }
-        return $this->urlSavePath($response->source()->url());
+        return $this->urlSavePath($response->url());
     }
 
+    /**
+     * Turns a URL into a full save path for the output file.
+     *
+     * @param URL $url
+     * @return string
+     */
     protected function urlSavePath(URL $url): string
     {
         $path = $url->siteFullPath();

@@ -1,13 +1,18 @@
 site:
-  url: 'http://localhost/static-pages/demo/'
+  url: 'http://localhost/addon-static-pages/demo/'
 
 addons:
   activate:
     - static-pages
+    - php-content
+
+theme:
+  activate:
+    - core/basic
 
 templates:
   site:
-    name: Demo Leafcutter site
+    name: Static pages demo
 
 cache:
   driver: ephemeral
@@ -17,85 +22,3 @@ assets:
   output:
     directory: '${base_dir}/assets/'
     url: '@/assets/'
-
-plugins:
-  system_staticpages:
-    enabled: false
-    ttl: 30
-
-theme:
-  css:
-    bundle: true
-    max_inlined: 102400
-    minify: true
-  js:
-    bundle: true
-    minify: true
-    inline_loader: false
-  variables:
-    # sizing
-    margin: 2rem
-    padding: 1.5rem
-    font-size: 1rem
-    font-scaler: 1.2
-    heading-font-scaler: 1.2
-    heading-scale: 1.2
-    line-height: 1.5em
-    line-height-loose: 1.8em
-    line-height-tight: 1.2em
-    # colors
-    color-primary: '#43A047'
-    color-secondary: '#9E9D24'
-    color-success: '#8BC34A'
-    color-danger: '#f44336'
-    color-warning: '#FF9800'
-    color-info: '#00BCD4'
-    # link colors
-    color-a: '#1a0dab'
-    color-a-visited: '#609'
-    color-a-focus: '${theme.variables.text-info}'
-    color-a-hover: ${theme.variables.text-primary}
-    color-a-active: ${theme.variables.text-success}
-    color-dark-a: '#1a0dab'
-    color-dark-a-visited: '#609'
-    color-dark-a-focus: ${theme.variables.text-dark-info}
-    color-dark-a-hover: ${theme.variables.text-dark-info}
-    color-dark-a-active: ${theme.variables.text-dark-success}
-    # light mode
-    text-normal: '#444'
-    text-accent: '#000'
-    text-primary: ${theme.variables.color-primary}
-    text-secondary: ${theme.variables.color-secondary}
-    text-success: ${theme.variables.color-success}
-    text-danger: ${theme.variables.color-danger}
-    text-warning: ${theme.variables.color-warning}
-    text-info: ${theme.variables.color-info}
-    text-muted: '#999'
-    bg-normal: '#fafafa'
-    bg-accent: '#eee'
-    bg-primary: ${theme.variables.color-primary}
-    bg-secondary: ${theme.variables.color-secondary}
-    bg-success: ${theme.variables.color-success}
-    bg-danger: ${theme.variables.color-danger}
-    bg-warning: ${theme.variables.color-warning}
-    bg-info: ${theme.variables.color-info}
-    bg-muted: '#ddd'
-    # dark mode
-    text-dark-normal: '#ddd'
-    text-dark-accent: '#eee'
-    text-dark-primary: ${theme.variables.text-primary}
-    text-dark-secondary: ${theme.variables.text-secondary}
-    text-dark-success: ${theme.variables.text-success}
-    text-dark-danger: ${theme.variables.text-danger}
-    text-dark-warning: ${theme.variables.text-warning}
-    text-dark-info: ${theme.variables.text-info}
-    text-dark-muted: '#999'
-    bg-dark-normal: '#333'
-    bg-dark-accent: '#222'
-    bg-dark-primary: ${theme.variables.bg-primary}
-    bg-dark-secondary: ${theme.variables.bg-secondary}
-    bg-dark-success: ${theme.variables.bg-success}
-    bg-dark-danger: ${theme.variables.bg-danger}
-    bg-dark-warning: ${theme.variables.bg-warning}
-    bg-dark-info: ${theme.variables.bg-info}
-    bg-dark-muted: '#555'

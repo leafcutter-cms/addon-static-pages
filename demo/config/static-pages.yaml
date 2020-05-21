@@ -1,0 +1,22 @@
+# The following config is available with this addon
+
+addons:
+  config:
+    leafcutter/addon-static-pages:
+      # The number of seconds after which a page is considered
+      # stale and will be regenerated. The actual time between
+      # page regenerations may be longer, depending on your output
+      # or content cache lifetimes.
+      ttl: 30
+      # If you're removing static pages on a live site, you should
+      # run with the addon installed, but disabled via this config
+      # option, until all html files are removed.
+      # On a large or less busy site it is more adviseable to 
+      # redeploy, or manually remove the generated HTML files
+      # somehow.
+      enabled: true
+      # By default pages are saved to base_dir, which is, by
+      # convention, the web root. Generally this is only useful
+      # to change if you're doing something odd or clever.
+      directory: ${base_dir}/
+
