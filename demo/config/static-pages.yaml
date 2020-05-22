@@ -1,5 +1,4 @@
 # The following config is available with this addon
-
 addons:
   config:
     leafcutter/addon-static-pages:
@@ -7,7 +6,7 @@ addons:
       # stale and will be regenerated. The actual time between
       # page regenerations may be longer, depending on your output
       # or content cache lifetimes.
-      ttl: 30
+      ttl: 5
       # If you're removing static pages on a live site, you should
       # run with the addon installed, but disabled via this config
       # option, until all html files are removed.

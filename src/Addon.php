@@ -66,20 +66,20 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
         $response = new Response();
         $response->setMime('application/javascript');
         $response->setTemplate(null);
-        $response->header('cache-control', 'max-age=60, public');
+        $response->header('cache-control', 'max-age=10, public');
         if ($this->needsRebuild($rUrl)) {
             if (is_file($this->urlSavePath($rUrl)) && !$this->config('enabled')) {
-                $response->setText('console.log("Deleting cached page in the background");');
+                $response->setText('/*intentionally does nothing*/');
                 unlink($this->urlSavePath($rUrl));
                 return $response;
             }
             $this->leafcutter->buildResponse($rUrl, false);
-            $response->setText('console.log("Rebuilding page in the background");');
+            $response->setText('/*intentionally does nothing*/');
             $response->doAfter(function () use ($rUrl) {
                 $this->leafcutter->buildResponse($rUrl, false);
             });
         } else {
-            $response->setText('');
+            $response->setText('/*intentionally does nothing*/');
         }
         return $response;
     }
@@ -142,7 +142,7 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
             $script = <<<EOS
 
 <!--staticPageMeta{{{{$meta}}}}-->
-<script src='$scriptURL' async defer></script>
+<script>if(window.Worker){new Worker('$scriptURL')}</script>
 
 EOS;
             $content = str_replace('</body>', "$script</body>", $content, $matches);
