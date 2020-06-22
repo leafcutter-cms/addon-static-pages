@@ -147,6 +147,7 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
 EOS;
             $content = str_replace('</body>', "$script</body>", $content, $matches);
             if ($matches != 1) {
+                // something is wrong with the markup, and this page can't be statically cached
                 return;
             }
             $fs = new Filesystem;

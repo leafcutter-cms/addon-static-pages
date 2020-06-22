@@ -20,8 +20,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "leafcutter/leafcutter": "dev-master",
-        "leafcutter/theme-core": "dev-master",
-        "leafcutter/addon-php-content": "dev-master"
+        "leafcutter/leafcutter": "dev-main",
+        "leafcutter/theme-core": "*",
+        "leafcutter/addon-php-content": "*"
     }
 }
