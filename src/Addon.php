@@ -69,17 +69,17 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
         $response->header('cache-control', 'max-age=10, public');
         if ($this->needsRebuild($rUrl)) {
             if (is_file($this->urlSavePath($rUrl)) && !$this->config('enabled')) {
-                $response->setText('/*intentionally does nothing*/');
+                $response->setContent('/*intentionally does nothing*/');
                 unlink($this->urlSavePath($rUrl));
                 return $response;
             }
             $this->leafcutter->buildResponse($rUrl, false);
-            $response->setText('/*intentionally does nothing*/');
+            $response->setContent('/*intentionally does nothing*/');
             $response->doAfter(function () use ($rUrl) {
                 $this->leafcutter->buildResponse($rUrl, false);
             });
         } else {
-            $response->setText('/*intentionally does nothing*/');
+            $response->setContent('/*intentionally does nothing*/');
         }
         return $response;
     }
