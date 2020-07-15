@@ -18,7 +18,7 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
      * Before returning a page, convert its query string into a
      * base64-encoded string inside the filename. This is necessary
      * to allow static caching of query-driven content.
-     * 
+     *
      * It's done across the board to provide consistency in page
      * URLs, regardless of whether they are actually cacheable.
      *
@@ -53,7 +53,7 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
             $query = URL::base64_decode($matches[1]);
             parse_str($query, $query);
             if ($query) {
-                $path = preg_replace('/__q__([a-zA-Z0-9\-_]+).html$/','',$path);
+                $path = preg_replace('/__q__([a-zA-Z0-9\-_]+).html$/', '', $path);
                 $url->setPath($path);
                 $url->setQuery($query);
             }
@@ -91,7 +91,7 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
      * @param URL $url
      * @return boolean
      */
-    protected function needsRebuild(URL $url) : bool
+    protected function needsRebuild(URL $url): bool
     {
         $file = $this->urlSavePath($url);
         if (is_file($file) && !$this->config('enabled')) {
