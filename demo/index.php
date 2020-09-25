@@ -10,7 +10,7 @@ date_default_timezone_set("America/Denver");
 
 //initialize configuration
 $config = new Config\Config();
-$config['base_dir'] = __DIR__;
+$config['directories.base'] = realpath(__DIR__.'/..');
 $config->readDir(__DIR__ . '/config/', null, true);
 $config->readFile(__DIR__ . '/config/env.yaml', null, true);
 

@@ -13,12 +13,3 @@ theme:
 templates:
   site:
     name: Static pages demo
-
-cache:
-  driver: ephemeral
-  directory: '${base_dir}/cache/'
-
-assets:
-  output:
-    directory: '${base_dir}/assets/'
-    url: '@/assets/'

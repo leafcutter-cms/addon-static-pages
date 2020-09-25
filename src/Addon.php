@@ -10,8 +10,8 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
 {
     const DEFAULT_CONFIG = [
         "enabled" => true,
-        "directory" => '${base_dir}/',
-        "ttl" => 30,
+        "directory" => '${directories.web}/',
+        "ttl" => 60,
     ];
 
     /**

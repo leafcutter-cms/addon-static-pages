@@ -14,8 +14,3 @@ addons:
       # redeploy, or manually remove the generated HTML files
       # somehow.
       enabled: true
-      # By default pages are saved to base_dir, which is, by
-      # convention, the web root. Generally this is only useful
-      # to change if you're doing something odd or clever.
-      directory: ${base_dir}/
-
