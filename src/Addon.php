@@ -131,10 +131,17 @@ class Addon extends \Leafcutter\Addons\AbstractAddon
         if (!$this->config('enabled')) {
             return;
         }
-        if ($path = $this->savePath($response)) {
+        // delete cached HTML if response status isn't 200
+        $path = $this->savePath($response);
+        if (!$this->shouldSave($response)) {
+            if (is_file($path)) {
+                unlink($path);
+            }
+        } else {
+            // save response
             $url = $response->source()->url();
             $content = $response->content();
-            $scriptURL = new URL('@/~staticPageBuild/' . base64_encode($response->source()->url()->sitePath()));
+            $scriptURL = new URL('@/~staticPageBuild/' . base64_encode($response->source()->url()->siteFullPath()));
             $meta = json_encode([
                 'hash' => $this->leafcutter->content()->hash($url->sitePath(), $url->siteNamespace()),
                 'time' => time(),
@@ -160,20 +167,32 @@ EOS;
      * file to cache a given Response.
      *
      * @param Response $response
-     * @return string|null
+     * @return string
      */
-    protected function savePath(Response $response): ?string
+    protected function savePath(Response $response): string
+    {
+        return $this->urlSavePath($response->url());
+    }
+
+    /**
+     * Determine whether the given response should be cached as
+     * as static HTML page.
+     *
+     * @param Response $response
+     * @return boolean
+     */
+    protected function shouldSave(Response $response): bool
     {
         if ($response->dynamic()) {
-            return null;
+            return false;
         }
         if ($response->status() != 200) {
-            return null;
+            return false;
         }
         if ($response->url()->query()) {
-            return null;
+            return false;
         }
-        return $this->urlSavePath($response->url());
+        return true;
     }
 
     /**
@@ -188,7 +207,7 @@ EOS;
         if ($path == '' || substr($path, -1) == '/') {
             $path .= 'index.html';
         }
-        return $this->config('directory') . '/' . $path;
+        return $this->config('directory') . $path;
     }
 
     /**
